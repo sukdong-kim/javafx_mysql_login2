@@ -9,8 +9,11 @@ import java.sql.SQLException;
 
 import javax.swing.JOptionPane;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -20,8 +23,14 @@ public class BusController {
 	PreparedStatement pst = null;
 	ResultSet srs;
 	int seatno = 0;
-	
-	@FXML BusTicket busTicket;
+	int price;
+
+	@FXML BusTicket busTicket = new BusTicket();
+    @FXML
+    private ComboBox<String> comboPrice;
+    
+    ObservableList<String> comboBoxList = 
+			FXCollections.observableArrayList("유아 : 2,000원","학생 : 3,000원","일반 : 5,000원");
 	
 	@FXML
 	private void initialize() {
@@ -30,13 +39,15 @@ public class BusController {
 			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/sampledb?serverTimezone=UTC", "root","brd901as-kim");
 			System.out.println("DB 연결 완료");
 			
-			pst = conn.prepareStatement("select * from buss where date =? and seatno=?");
+			pst = conn.prepareStatement("select * from busses where date =? and seatno=?");
 			
 		} catch (ClassNotFoundException e) {
 			System.out.println("JDBC 드라이버 로드 에러");
 		} catch (SQLException e) {
 			System.out.println("SQL 실행 에러");
 		} 
+		
+		comboPrice.setItems(comboBoxList);
 	}
 	
 
@@ -51,6 +62,17 @@ public class BusController {
 
     @FXML
     private TextArea txtbill;
+    
+
+    
+    @FXML
+    void onClickCombo(ActionEvent event) {
+		String sel = comboPrice.getValue() ;
+		int a = comboPrice.getSelectionModel().getSelectedIndex(); 
+			if(a==0) price = 2000;
+			if(a==1) price = 3000;
+			if(a==2) price = 5000;
+    }
 
     @FXML
     void onClick1(ActionEvent event) {
@@ -123,12 +145,17 @@ public class BusController {
     	seatno = 9;
     	JOptionPane.showMessageDialog(null, seatno);
     }
-
+    
+    @FXML
+    void onClickContinue(ActionEvent event) {
+    	busTicket.showMainView();
+    }
+    
     @FXML
     void onClickBook(ActionEvent event) {
     	String customer = txtcustomer.getText();
     	int seat = seatno;
-    	int price = Integer.parseInt(txtprice.getText());
+ //   	price = Integer.parseInt(txtprice.getText());
     	
     	int year = (txtdate.getValue().getYear());
     	int month = (txtdate.getValue().getMonthValue());
@@ -147,7 +174,7 @@ public class BusController {
 			if(srs.next()) {
 				JOptionPane.showMessageDialog(null, "This seat is Already booked!");
 			} else {
-				pst = conn.prepareStatement("insert into buss (name, seatno, price,date) values (?,?,?,?)");
+				pst = conn.prepareStatement("insert into busses (name, seatno, price,date) values (?,?,?,?)");
 				pst.setString(1, customer);
 				pst.setInt(2, seat);
 				pst.setInt(3, price);
@@ -187,10 +214,21 @@ public class BusController {
 		}
     }
     
+    @FXML
+    void onClickStop(ActionEvent event) {
+    	try {
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	busTicket.stopMainView();
+    }
+    
     public void bill() {
     	String customer = txtcustomer.getText();
     	int seat = seatno;
-    	int price = Integer.parseInt(txtprice.getText());
+   // 	int price = Integer.parseInt(txtprice.getText());
     	
     	int year = (txtdate.getValue().getYear());
     	int month = (txtdate.getValue().getMonthValue());
@@ -198,15 +236,15 @@ public class BusController {
     	
     	String date = ""+year+"-"+month+"-"+day;
     	
-    	txtbill.setText(txtbill.getText()+"***************************************************************\n");
-    	txtbill.setText(txtbill.getText()+"****************    bill    ***********************************\n");
-    	txtbill.setText(txtbill.getText()+"***************************************************************\n");
+    	txtbill.setText(txtbill.getText()+"**********************************************************\n");
+    	txtbill.setText(txtbill.getText()+"****************    bill    **********************************\n");
+    	txtbill.setText(txtbill.getText()+"**********************************************************\n\n\n");
     	txtbill.setText(txtbill.getText()+"Customer" + "\t"+ customer + "\n");
     	txtbill.setText(txtbill.getText()+"SeatNo" + "\t"+ seat + "\n");
     	txtbill.setText(txtbill.getText()+"Prices" + "\t"+ price + "\n");
-    	txtbill.setText(txtbill.getText()+"Date" + "\t"+ date + "\n\n");
-    	txtbill.setText(txtbill.getText()+"***************************************************************\n");
-    	txtbill.setText(txtbill.getText()+"****************    Thank you Come Again***********************\n");
+    	txtbill.setText(txtbill.getText()+"Date" + "\t"+ date + "\n\n\n");
+    	txtbill.setText(txtbill.getText()+"**********************************************************\n");
+    	txtbill.setText(txtbill.getText()+"**************** Thank you Come Again******************\n");
     }
 
 }

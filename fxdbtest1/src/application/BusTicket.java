@@ -27,7 +27,11 @@ public class BusTicket  extends Application  {
 			e.printStackTrace();
 		}
 	}
-
+	
+	public void stopMainView() {
+		primaryStage.close();
+	}
+	
 	public static void showCheckStage() throws IOException {
 		FXMLLoader loader = new FXMLLoader();
 		loader.setLocation(Main.class.getResource("ViewCheck.fxml"));

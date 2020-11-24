@@ -71,7 +71,8 @@ public class BusCheckController {
     	ObservableList<users> list = FXCollections.observableArrayList();
     	
 		try {
-			pst = conn.prepareStatement("select * from buss");		
+			pst = conn.prepareStatement("select * from busses where date =?");
+			pst.setString(1, date);	
 			srs = pst.executeQuery();
 			if(!srs.next()) {
 				JOptionPane.showMessageDialog(null, "No Seat Booked!");				
