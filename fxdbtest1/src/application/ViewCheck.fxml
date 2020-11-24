@@ -20,5 +20,6 @@
       </TableView>
       <Button layoutX="384.0" layoutY="58.0" mnemonicParsing="false" onAction="#onClickSearch" text="Search" />
       <DatePicker fx:id="txtdate" layoutX="140.0" layoutY="58.0" prefHeight="23.0" prefWidth="194.0" />
+      <Button layoutX="384.0" layoutY="14.0" mnemonicParsing="false" onAction="#onClickHome" text="Home" />
    </children>
 </AnchorPane>

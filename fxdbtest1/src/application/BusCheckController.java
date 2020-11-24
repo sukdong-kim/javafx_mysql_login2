@@ -1,5 +1,6 @@
 package application;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -23,6 +24,7 @@ public class BusCheckController {
 	PreparedStatement pst = null;
 	ResultSet srs;
 	int seatno = 0;
+	@FXML BusTicket busTicket = new BusTicket();
 	
 	@FXML
 	private void initialize() {
@@ -55,7 +57,11 @@ public class BusCheckController {
 
     @FXML
     private TableColumn<users, String> col_date;
-
+    @FXML
+    void onClickHome(ActionEvent event) throws IOException {
+    	busTicket.showMainView();
+    	busTicket.checkDialogStage.close();
+    }
     @FXML
     void onClickSearch(ActionEvent event) {
     	int year = (txtdate.getValue().getYear());

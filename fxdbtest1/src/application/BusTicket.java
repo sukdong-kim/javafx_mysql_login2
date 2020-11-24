@@ -10,8 +10,13 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 public class BusTicket  extends Application  {
 	private static Stage primaryStage;
+	public static Stage checkDialogStage;
 	@Override
 	public void start(Stage primaryStage) {
+		this.primaryStage = primaryStage;
+		showMainView();
+	}
+	public void showMainView() {
 		try {
 			Parent root = FXMLLoader.load(getClass().getResource("ViewTicket.fxml"));
 			Scene scene = new Scene(root,1100,500);
@@ -28,7 +33,7 @@ public class BusTicket  extends Application  {
 		loader.setLocation(Main.class.getResource("ViewCheck.fxml"));
 		AnchorPane checkView = loader.load();
 
-		Stage checkDialogStage = new Stage();
+		checkDialogStage = new Stage();
 		checkDialogStage.setTitle("Check Seat");
 		checkDialogStage.initModality(Modality.WINDOW_MODAL);
 		checkDialogStage.initOwner(primaryStage);
